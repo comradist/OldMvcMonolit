@@ -1,0 +1,81 @@
+@using Microsoft.AspNetCore.Identity
+@model List<UserInformation>
+
+
+@{
+    ViewData["Title"] = "Users Role Manager";
+    int idModal = 1;
+    int i = 0;
+    List<string> list = new();
+}
+
+<h1>@ViewData["Title"]</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>
+                    @foreach (var role in user.AllUserRoles)
+                    {
+                        if (role.Selected)
+                        {
+                            list.Add(role.RoleName);
+                        }
+                    }
+                    @string.Join(" , ", list)
+                </td>
+                <td>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#toggleBtnManage@(idModal)"
+                        class="btn btn-primary">Manage Role</button>
+                </td>
+            </tr>
+
+            <div class="modal fade" id="toggleBtnManage@(idModal)" tabindex="-1"
+                aria-labelledby="exampleModalLabel@(idModal)" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel@(idModal)">Chouse user roles: </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" asp-controller="UserRoles" asp-action="ManageRole">
+                            <div class="modal-body">
+                                @for (int j = 0; j < Model[i].AllUserRoles.Count; j++)
+                                {                 
+                                    <div class="form-check m-1">
+                                        <input type="hidden" asp-for="@Model[i].AllUserRoles[j].RoleId" />
+                                        <input type="hidden" asp-for="@Model[i].AllUserRoles[j].RoleName" />
+                                        <input asp-for="@Model[i].AllUserRoles[j].Selected" class="form-check-input" />
+                                        <label class="form-check-label" asp-for="@Model[i].AllUserRoles[j].Selected">
+                                            @Model[i].AllUserRoles[j].RoleName
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            i++;
+            idModal++;
+        }
+    </tbody>
+</table>
+

@@ -1,0 +1,32 @@
+@using Packt.Shared
+@model IEnumerable<Customer>
+
+<h2>@ViewData["Title"]"</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Company Name</th>
+            <th>Contact Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model.Any())
+        {
+            foreach(var c in Model)
+            {
+                <tr>
+                    <td>@c.CompanyName</td>
+                    <td>@c.ContactName</td>
+                    <td>
+                        @c.Address
+                        @c.City
+                        @c.Region
+                        @c.Country
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

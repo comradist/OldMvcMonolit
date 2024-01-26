@@ -1,0 +1,25 @@
+@using Packt.Shared
+@model Packt.Shared.Category
+
+@{
+    ViewData["Title"] = "Category example";
+}
+<h2>@ViewData["Title"]</h2>
+<div>
+    <dl class="list-group-horizontal">
+        <dt>Category Id</dt>
+        <dd>@Model.CategoryId</dd>
+        <dt>Category Name</dt>
+        <dd>@Model.CategoryName</dd>
+        <dt>Description</dt>
+        <dd>@Model.Description</dd>
+        <dt>Products: </dt>
+        <ul>
+        @foreach(Product p in Model.Products)
+        {
+            <li><a asp-controller="Home" asp-action="ProductDetail" asp-route-id="@p.ProductId">@p.ProductName</a></li>
+        }
+    </ul>
+    </dl>
+    
+</div>

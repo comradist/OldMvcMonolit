@@ -1,0 +1,155 @@
+﻿@using Packt.Shared
+@model HomeIndexViewModel
+
+@{
+    string currentItem = "";
+    string currentAria = "";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p class="alert alert-primary">@DateTime.Now.ToLongTimeString()</p>
+    <p><a class="btn btn-primary" asp-action="ModelBinding" asp-controller="Home">Binding</a></p>
+</div>
+
+@if (Model is not null)
+{
+    <div id="categories" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            @for(int i = 0; i < Model.Categories.Count; i++)
+            {
+                if(i == 0)
+                {
+                    currentItem = "active";
+                    currentAria = "true";
+                }
+                else
+                {
+                    currentAria = "";
+                    currentItem = "";
+                }
+                <button type="button" data-bs-target="#categories" data-bs-slide-to="@i" class="@currentItem" aria-current="@currentAria" aria-label="Slide @i"></button>
+            }
+        </div>
+        <div class="carousel-inner">
+           @for(int i = 0; i < Model.Categories.Count; i++)
+           {
+                if(i == 0)
+                {
+                    currentItem = "active";
+                }
+                else
+                {
+                    currentItem = "";
+                }
+                <div class="carousel-item @currentItem">
+                    <img src="~/images/category@(Model.Categories[i].CategoryId).jpeg" class="d-block w-100" alt="@(Model.Categories[i].CategoryName)">
+                    <div class="carousel-caption">
+                        <h1>@Model.Categories[i].CategoryName</h1>
+                        <h2>@Model.Categories[i].Description</h2>
+                        <p>
+                            <a asp-controller="Home" asp-action="CategoryDetail" asp-route-id="@Model.Categories[i].CategoryId" class="btn btn-primary" role="button">View</a>
+                        </p>
+      </div>
+                </div>
+           }
+
+        </div>
+        <a class="carousel-control-prev" href="#categories" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </a>
+        <a class="carousel-control-next" href="#categories" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </a>
+    </div>
+}
+
+
+
+
+
+@* @if(Model is not null)
+{
+    <div id="categories" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-keyboard="true">
+        <ol class="carousel-indicators">
+            @for (int i = 0; i < Model.Categories.Count; i++)
+            {
+                if (i == 0)
+                {
+                    currentItem = "active";
+                }
+                else
+                {
+                    currentItem = "";
+                }
+                <li data-bs-target="#categories" data-slide-to="@i" class="@currentItem"></li>
+            }
+        </ol>
+    <div class="carousel-inner">
+        @for (int i = 0; i < Model.Categories.Count; i++)
+        {
+            if(i == 0)
+            {
+                currentItem = "active";
+            }
+            else
+            {
+                currentItem = "";
+            }
+            <div class="carousel-item @currentItem">
+                <img class="d-block w-100" src="~/images/category@(Model.Categories[i].CategoryId).jpeg" alt="@Model.Categories[i].CategoryName" />
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>@Model.Categories[i].CategoryName</h2>
+                    <h3>@Model.Categories[i].Description</h3>
+                    <p>
+                        <a class="btn btn-primary" href="/category/@Model.Categories[i].CategoryId">View</a>
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+    <a class="carousel-control-prev" href="#categories" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#categories" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+    </div>
+} *@
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Northwind</h1>
+        <p class="lead">
+            We have had @Model?.VisitorCount visitors this month.
+        </p>
+        <h3>Query product by price</h3>
+        <form asp-controller="Home" asp-action="ProductsThatCostMoreThan" method="post">
+            <input name="price" placeholder="Enter a product price" />
+            <input type="submit" />
+        </form>
+
+        @if (Model is not null)
+        {
+            <h2>Products</h2>
+            <div id="product-columns">
+                <ul class="list-group">
+                    @foreach (Product p in @Model.Products)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <a asp-controller="Home" asp-action="ProductDetail" asp-route-id="@p.ProductId" class="btn btn-outline-primary">
+                                <div class="ms-2 me-auto">@p.ProductName</div>
+                                <span class="badge bg-primary rounded-pill">
+                                    @(p.UnitPrice is null ? "zero" : p.UnitPrice.Value.ToString("C"))
+                                </span>
+                            </a>
+                        </li>
+                        
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>

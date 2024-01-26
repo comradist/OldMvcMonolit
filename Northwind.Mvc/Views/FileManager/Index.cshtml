@@ -1,0 +1,109 @@
+@model FileUploadViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h4>Start Uploading Files Here</h4>
+<hr />
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-@ViewBag.Alert alert-dismissible" style="margin-top:20px">
+    @ViewBag.Message
+    </div>
+}
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="files" multiple required />
+    <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
+    <button type="submit" class="btn btn-primary" asp-controller="FileManager" asp-action="UploadToFileSystem">Upload To File
+        System</button>
+    <button type="submit" class="btn btn-primary" asp-controller="FileManager" asp-action="UploadToDataBase">Upload To
+        DataBase</button>
+</form>
+<hr />
+<form method="post">
+    <input class="form-control" type="text" placeholder="Enter looking file" name="name" required /> 
+    <button type="submit" class="btn btn-primary" asp-controller="FileManager" asp-action="Index">Search</button>
+</form>
+<hr />
+<h4>Files on File System</h4>
+@if (Model.FileOnFileSystem.Count == 0)
+{
+    <caption>No Records Found</caption>
+}
+else
+{
+    <caption>List of Files on File System</caption>
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>File Type</th>
+            <th>Created On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in Model.FileOnFileSystem)
+            {
+                <tr>
+                    <td>@file.Id</td>
+                    <td>@file.Name</td>
+                    <td>@file.Description</td>
+                    <td>@file.FileType</td>
+                    <td>@file.CreateOn</td>
+                    <td>
+                        <a type="button" class="btn btn-primary" asp-controller="FileManager"
+                            asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
+                        <a type="button" class="btn btn-primary" asp-controller="FileManager" asp-action="DeleteFromFileSystem"
+                            asp-route-id="@file.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<hr />
+<h4>Files on Database</h4>
+@if (Model.FileOnDataBase.Count == 0)
+{
+    <caption>No Records Found</caption>
+}
+else
+{
+    <caption>List of Files on Database</caption>
+    <div class="table-responsive">
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>File Type</th>
+            <th>Created On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in Model.FileOnDataBase)
+            {
+                <tr>
+                    <td>@file.Id</td>
+                    <td>@file.Name</td>
+                    <td>@file.Description</td>
+                    <td>@file.FileType</td>
+                    <td>@file.CreateOn</td>
+                    <td>
+                        <a type="button" class="btn btn-primary" asp-controller="FileManager" asp-action="DownloadFromDataBase"
+                            asp-route-id="@file.Id">Download</a>
+                        <a type="button" class="btn btn-primary" asp-controller="FileManager" asp-action="DeleteFromDataBase"
+                            asp-route-id="@file.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+}
